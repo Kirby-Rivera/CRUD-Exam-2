@@ -68,20 +68,17 @@ export default function Layout({ children }: LayoutProps) {
           width: drawerOpen ? `calc(100% - ${drawerWidth}px)` : "100%",
           ml: drawerOpen ? `${drawerWidth}px` : 0,
           transition: "all 0.3s ease",
+          bgcolor: "background.default",
         }}
       >
         <Toolbar>
           <IconButton
-            color="inherit"
             edge="start"
             onClick={toggleDrawer}
             sx={{ mr: 2 }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            CRUD
-          </Typography>
         </Toolbar>
       </AppBar>
 
