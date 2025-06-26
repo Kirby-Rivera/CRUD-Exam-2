@@ -1,5 +1,5 @@
 import { useFormik, FormikHelpers } from "formik";
-import { FormDataType } from "@/configs/auth";
+import { FormDataType } from "@/configs/types";
 import { useAuth } from "../app/AppAuthProvider";
 
 export default function useHandleLogIn() {
@@ -13,8 +13,10 @@ export default function useHandleLogIn() {
       values: FormDataType,
       { setSubmitting }: FormikHelpers<FormDataType>
     ) => {
-      login(values);
-      setSubmitting(false);
+      setTimeout(() => {
+        login(values);
+        setSubmitting(false);
+      }, 500);
     },
   });
 

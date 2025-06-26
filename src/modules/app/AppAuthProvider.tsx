@@ -9,12 +9,12 @@ import cookies from "@/utils/cookies";
 import { SESSION_COOKIE } from "@/configs/constants";
 import { authLogin } from "@/api/auth";
 import { useRouter } from "next/router";
-import { LoginData, LoginResponse, FormDataType } from "@/configs/auth";
+import { FormDataType } from "@/configs/types";
 
 interface AuthContextType {
   isAuth: boolean;
   login: (formData: FormDataType) => Promise<void>;
-  //   logout: () => void;
+  logout: () => void;
 }
 
 interface AuthProviderProps {
@@ -41,8 +41,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  function logout(): void {
+    cookies.remove(SESSION_COOKIE);
+    setIsAuth(false);
+  }
+
   return (
-    <AuthContext.Provider value={{ isAuth, login }}>
+    <AuthContext.Provider value={{ isAuth, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

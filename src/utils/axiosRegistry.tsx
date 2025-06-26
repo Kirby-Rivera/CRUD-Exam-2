@@ -1,4 +1,3 @@
-// lib/axiosRegistry.ts
 import axios, { AxiosInstance } from "axios";
 import { SESSION_COOKIE } from "@/configs/constants";
 import { API_URL } from "@/configs/environments";
