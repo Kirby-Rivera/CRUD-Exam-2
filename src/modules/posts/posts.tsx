@@ -1,9 +1,9 @@
-import Layout from "@/components/layout";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function Posts() {
   return (
-    <Layout>
+    <ProtectedRoute>
       <div>This is posts page</div>
-    </Layout>
+    </ProtectedRoute>
   );
 }

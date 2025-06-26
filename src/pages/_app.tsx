@@ -2,12 +2,15 @@ import "@/styles/globals.scss";
 import type { AppProps } from "next/app";
 import AppThemeProvider from "@/modules/app/AppThemeProvider";
 import { AuthProvider } from "@/modules/app/AppAuthProvider";
+import Layout from "@/components/layouts/PrivateLayout";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <AuthProvider>
       <AppThemeProvider>
-        <Component {...pageProps} />;
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
       </AppThemeProvider>
     </AuthProvider>
   );

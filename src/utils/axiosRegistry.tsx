@@ -40,7 +40,6 @@ axiosRegistry.interceptors.response.use(
     // You could handle global error responses here
     if (error.response?.status === 403) {
       console.warn("Unauthorized. Redirecting to login...");
-      // e.g., redirect to login page
     }
     return Promise.reject(error);
   }

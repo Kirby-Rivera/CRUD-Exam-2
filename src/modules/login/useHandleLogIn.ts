@@ -13,12 +13,10 @@ export default function useHandleLogIn() {
       values: FormDataType,
       { setSubmitting }: FormikHelpers<FormDataType>
     ) => {
-      setTimeout(() => {
-        login(values);
-        setSubmitting(false);
-      }, 500);
+      login(values);
+      setSubmitting(false);
     },
   });
 
-  return formik; // ✅ return the formik object
+  return formik;
 }
