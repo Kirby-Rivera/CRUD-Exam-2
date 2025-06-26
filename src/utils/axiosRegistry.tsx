@@ -21,11 +21,11 @@ const axiosRegistry: AxiosInstance = axios.create({
 
 axiosRegistry.interceptors.request.use(
   (config) => {
-    // Example: Attach token if available
-    const token = cookies.get(SESSION_COOKIE)?.value;
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (typeof window !== "undefined") {
+      const token = cookies.get(SESSION_COOKIE)?.value;
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
     return config;
   },

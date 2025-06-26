@@ -3,7 +3,7 @@
 import PrivateLayout from "./PrivateLayout";
 import PublicLayout from "./PublicLayout";
 import { useAuth } from "@/modules/app/AppAuthProvider";
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 interface LayoutPropType {
@@ -12,10 +12,16 @@ interface LayoutPropType {
 
 export default function Layout(props: LayoutPropType) {
   const { children } = props;
-
+  const { isAuth } = useAuth();
   const pathname: string = usePathname();
 
-  const { isAuth } = useAuth();
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) return null;
 
   return isAuth ? (
     <PrivateLayout>{children}</PrivateLayout>
