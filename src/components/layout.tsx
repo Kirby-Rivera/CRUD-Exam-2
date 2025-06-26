@@ -60,8 +60,7 @@ export default function Layout({ children }: LayoutProps) {
   );
 
   return (
-    <>
-      {/* Header with toggle button */}
+    <Box>
       <AppBar
         position="fixed"
         sx={{
@@ -72,17 +71,12 @@ export default function Layout({ children }: LayoutProps) {
         }}
       >
         <Toolbar>
-          <IconButton
-            edge="start"
-            onClick={toggleDrawer}
-            sx={{ mr: 2 }}
-          >
+          <IconButton edge="start" onClick={toggleDrawer} sx={{ mr: 2 }}>
             <MenuIcon />
           </IconButton>
         </Toolbar>
       </AppBar>
 
-      {/* Sidebar */}
       <Drawer
         variant="persistent"
         open={drawerOpen}
@@ -146,20 +140,19 @@ export default function Layout({ children }: LayoutProps) {
         </Box>
       </Drawer>
 
-      {/* Main content area */}
       <Box
         component="main"
         sx={{
           flexGrow: 1,
           bgcolor: "background.default",
           p: 3,
-          mt: 8, // To push content below AppBar
+          mt: 8,
           ml: drawerOpen ? `${drawerWidth}px` : 0,
           transition: "margin 0.3s ease",
         }}
       >
         {children}
       </Box>
-    </>
+    </Box>
   );
 }
