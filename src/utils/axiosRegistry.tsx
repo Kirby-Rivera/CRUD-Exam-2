@@ -1,72 +1,52 @@
-import axios, { AxiosInstance } from "axios";
-import { SESSION_COOKIE } from "@/configs/constants";
-import { API_URL } from "@/configs/environments";
-import cookies from "./cookies";
+import axios, { AxiosRequestConfig, Method, AxiosError } from 'axios';
+import { API_URL } from '@/configs/environments';
 
-interface HttpPropType {
-  method: "GET" | "POST" | "PUT" | "DELETE";
-  endpoint: string;
-  formData?: any;
-}
+// Optional: Helper to get the token from somewhere (localStorage, cookies, etc.)
+const getAuthToken = () => {
+  return localStorage.getItem('access_token'); // or cookies.get('token')
+};
 
-const axiosRegistry: AxiosInstance = axios.create({
-  baseURL: API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-  withCredentials: true,
+const axiosInstance = axios.create({
+  baseURL: API_URL, // <-- your base URL here
+  // You can also set default headers, timeouts, etc. here
 });
 
-// Optional: Add request interceptor
+export const fetcher = async <D = never>(
+  method: Method,
+  url: string,
+  params?: object,
+  options?: AxiosRequestConfig
+): Promise<D> => {
+  const token = getAuthToken();
 
-axiosRegistry.interceptors.request.use(
-  (config) => {
-    if (typeof window !== "undefined") {
-      const token = cookies.get(SESSION_COOKIE)?.value;
-      if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+  const config: AxiosRequestConfig = {
+    url,
+    method,
+    headers: {
+      Authorization: token ? `Bearer ${token}` : '',
+      ...(options?.headers || {}), // allow overriding or extending headers
+    },
+    ...options,
+  };
+
+  if (method.toUpperCase() === 'GET') {
+    config.params = params;
+  } else {
+    config.data = params;
+  }
+
+  try {
+    const response = await axiosInstance.request<D>(config);
+    return response.data;
+  } catch (error) {
+    // Handle 403 or other errors here
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 403) {
+        console.error('Access denied: 403');
+        // You can handle logout, redirect to login, show message, etc.
       }
     }
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-// Optional: Add response interceptor
-axiosRegistry.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    // You could handle global error responses here
-    if (error.response?.status === 403) {
-      console.warn("Unauthorized. Redirecting to login...");
-    }
-    return Promise.reject(error);
+    // Rethrow so the caller can handle it too
+    throw error;
   }
-);
-
-export async function http<T>({
-  method,
-  endpoint,
-  formData,
-}: HttpPropType): Promise<T> {
-  let response;
-
-  switch (method) {
-    case "GET":
-      response = await axiosRegistry.get(endpoint);
-      break;
-    case "POST":
-      response = await axiosRegistry.post(endpoint, formData);
-      break;
-    case "PUT":
-      response = await axiosRegistry.put(endpoint, formData);
-      break;
-    case "DELETE":
-      response = await axiosRegistry.delete(endpoint);
-      break;
-    default:
-      throw new Error(`Unsupported HTTP method: ${method}`);
-  }
-
-  return response.data;
-}
+};
