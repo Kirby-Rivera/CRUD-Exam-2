@@ -1,19 +1,14 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 import cookies from "@/utils/cookies";
 import { SESSION_COOKIE } from "@/configs/constants";
-import { authLogin } from "@/api/auth";
+import { authLogin, authSignup } from "@/api/auth";
 import { useRouter } from "next/router";
-import { FormDataType } from "@/configs/types";
+import { FormDataType, SignupRequest } from "@/configs/types";
 
 interface AuthContextType {
   isAuth: boolean;
   login: (formData: FormDataType) => Promise<void>;
+  signup: (formData: SignupRequest) => Promise<void>;
   logout: () => void;
 }
 
@@ -41,16 +36,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function signup(formData: SignupRequest): Promise<void> {
+    try {
+      const response = await authSignup(formData);
+
+      console.log(response.message);
+
+      router.push("/");
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function logout(): void {
     cookies.remove(SESSION_COOKIE);
     setIsAuth(false);
   }
 
   return (
-    <AuthContext.Provider value={{ isAuth, login, logout }}>
+    <AuthContext.Provider value={{ isAuth, login, logout, signup }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export const useAuth = () => useContext(AuthContext)!;
+export const useAuth = () => useContext(AuthContext);

@@ -5,10 +5,11 @@ interface AuthLayoutProps {
   children: ReactNode;
   title?: string;
   subtitle?: string;
+  toAuth: string;
 }
 
 export default function PublicLayout(props: AuthLayoutProps) {
-  const { children, title, subtitle } = props;
+  const { children, title, subtitle, toAuth } = props;
 
   return (
     <Box
@@ -43,6 +44,14 @@ export default function PublicLayout(props: AuthLayoutProps) {
             </Typography>
           )}
           {children}
+          <Typography
+            variant="h5"
+            component="h1"
+            gutterBottom
+            textAlign="center"
+          >
+            {toAuth}
+          </Typography>
         </Paper>
       </Container>
     </Box>

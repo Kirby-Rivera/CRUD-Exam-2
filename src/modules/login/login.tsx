@@ -1,48 +1,56 @@
-import { Formik, Field, Form, FormikHelpers } from "formik";
-import { useAuth } from "../app/AppAuthProvider";
 import useHandleLogIn from "./useHandleLogIn";
-
-interface ValuesType {
-  email: string;
-  password: string;
-}
+import { TextField, Button, Box } from "@mui/material";
+import styles from  "./Login.module.scss"
 
 export default function LoginForm() {
   const formik = useHandleLogIn();
 
   return (
-    <form onSubmit={formik.handleSubmit}>
-      <div>
-        <label htmlFor="email">Email: </label>
-        <input
+    <form onSubmit={formik.handleSubmit} className={styles["login-form"]}>
+      <Box>
+        {/* <label htmlFor="email">Email: </label> */}
+        <TextField
+          sx={{
+            width: "100%",
+          }}
           id="email"
           name="email"
           type="email"
           value={formik.values.email}
+          label="Email"
           onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
         />
         {formik.touched.email && formik.errors.email && (
-          <div style={{ color: "red" }}>{formik.errors.email}</div>
+          <Box style={{ color: "red" }}>{formik.errors.email}</Box>
         )}
-      </div>
+      </Box>
 
-      <div>
-        <label htmlFor="password">Password: </label>
-        <input
+      <Box>
+        {/* <label htmlFor="password">Password: </label> */}
+        <TextField
+          sx={{
+            width: "100%",
+          }}
           id="password"
           name="password"
           type="password"
+          label="Password"
           value={formik.values.password}
           onChange={formik.handleChange}
         />
         {formik.touched.password && formik.errors.password && (
-          <div style={{ color: "red" }}>{formik.errors.password}</div>
+          <Box style={{ color: "red" }}>{formik.errors.password}</Box>
         )}
-      </div>
+      </Box>
 
-      <button type="submit" disabled={formik.isSubmitting}>
+      <Button
+        variant="contained"
+        type="submit"
+        disabled={formik.isSubmitting}
+      >
         {formik.isSubmitting ? "Logging in..." : "Login"}
-      </button>
+      </Button>
     </form>
   );
 }
